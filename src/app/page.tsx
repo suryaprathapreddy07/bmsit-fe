@@ -23,7 +23,7 @@ export default function Home() {
   };
 
   const userPopoverContent = (
-    <div className='flex flex-col items-center p-4 gap-4  '>
+    <div className='flex flex-col items-center p-4 px-8 gap-4  '>
       <UserOutlined className='text-[64px]' />
       <p className='text-lg font-medium'>{session?.user?.name}</p>
       <Button onClick={handleLogout}>Logout</Button>
