@@ -4,6 +4,9 @@ import { DownloadOutlined, EyeOutlined, UploadOutlined } from '@ant-design/icons
 import { useSession } from 'next-auth/react';
 import dayjs from 'dayjs';
 
+
+
+
 interface Item {
   doc_user_id: {
     name: string;
@@ -93,7 +96,7 @@ const Clubs: React.FC<Props> = ({ items,fetchDocuments }) => {
     formData.append('doc_user_id', session?.user?.id as string);
 
     try {
-      const response = await fetch('http://localhost:4200/api/documents/upload', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session?.accessToken}`, // Set the authorization token

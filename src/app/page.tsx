@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import Clubs from './components/ClubsList.tsx/Clubs';
 
 export default function Home() {
+
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -32,7 +33,7 @@ export default function Home() {
   const [documents, setDocuments] = useState([]);
   const fetchDocuments = async () => {
     try {
-      const response = await fetch('http://localhost:4200/api/documents', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents`, {
         headers: {
           'Authorization': `Bearer ${session?.accessToken}`
         }

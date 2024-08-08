@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextAuthOptions } from 'next-auth';
+import { message } from 'antd';
 
 
 const authOptions: NextAuthOptions = {
@@ -15,8 +16,9 @@ const authOptions: NextAuthOptions = {
       },
       authorize: async (credentials) => {
         if (!credentials) return null;
+        const url=`${process.env.NEXT_PUBLIC_API_URL}/users/login`
 
-        const res = await fetch('http://localhost:4200/api/users/login', {
+        const res = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -27,6 +29,11 @@ const authOptions: NextAuthOptions = {
 
         const data = await res.json();
 
+        if(data?.success==0){
+            message.error(data.message);
+            return null;
+        }
+
         if (res.ok && data.user) {
           return {
             id: data.user._id,
@@ -36,6 +43,8 @@ const authOptions: NextAuthOptions = {
             role: data.user.role,
           };
         }
+
+       
         return null;
       },
     }),
