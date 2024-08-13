@@ -20,7 +20,8 @@ export default function AppLayout({
             router.push('/auth/login'); // Redirect to login if not authenticated and not on signup page
           }
     } else {
-      router.push('/'); // Redirect to main page if authenticated
+      if(pathname === '/auth/login' || pathname === '/auth/signup')router.push('/home'); // Redirect to main page if authenticated
+      else router.push(pathname); // Redirect to main page if authenticated
     }
   }, [session, status, router,pathname]);
 

@@ -24,9 +24,10 @@ interface Item {
 interface Props {
   items: Item[];
   fetchDocuments: () => void;
+  clubId?: string;
 }
 
-const Clubs: React.FC<Props> = ({ items,fetchDocuments }) => {
+const ClubDocuments: React.FC<Props> = ({ items,fetchDocuments,clubId }) => {
   const { data: session } = useSession();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
@@ -41,11 +42,6 @@ const Clubs: React.FC<Props> = ({ items,fetchDocuments }) => {
     URL.revokeObjectURL(url);
   };
 
-  const handlePreview = (item: Item) => {
-    const blob = new Blob([new Uint8Array(item.file.data)], { type: item.file.type });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-  };
 
   const columns = [
     {
@@ -94,6 +90,7 @@ const Clubs: React.FC<Props> = ({ items,fetchDocuments }) => {
     formData.append('name', values.name);
     formData.append('description', values.description);
     formData.append('doc_user_id', session?.user?.id as string);
+    formData.append('club_id', clubId as string);
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents/upload`, {
@@ -128,12 +125,12 @@ const Clubs: React.FC<Props> = ({ items,fetchDocuments }) => {
   return (
     <div className='flex flex-col gap-2'>
       <div className='flex justify-between'>
-        <p className='text-xl font-bold'>Announcements</p>
+        <p className='text-xl font-bold'></p>
         {session?.user?.role === 'admin' && <Button type='primary' icon={<UploadOutlined />} onClick={showModal}>Upload</Button> }
        
         <Modal
           title="Upload File"
-          visible={isModalVisible}
+          open={isModalVisible}
           onCancel={handleCancel}
           footer={null}
         >
@@ -187,4 +184,4 @@ const Clubs: React.FC<Props> = ({ items,fetchDocuments }) => {
   );
 };
 
-export default Clubs;
+export default ClubDocuments;
