@@ -25,9 +25,10 @@ interface Props {
   items: Item[];
   fetchDocuments: () => void;
   clubId?: string;
+  setRefetch?: (value: boolean) => void;
 }
 
-const ClubDocuments: React.FC<Props> = ({ items,fetchDocuments,clubId }) => {
+const ClubDocuments: React.FC<Props> = ({ items,fetchDocuments,clubId,setRefetch }) => {
   const { data: session } = useSession();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
@@ -106,6 +107,8 @@ const ClubDocuments: React.FC<Props> = ({ items,fetchDocuments,clubId }) => {
         setIsModalVisible(false);
         form.resetFields();
         fetchDocuments();
+        if(setRefetch)
+        setRefetch(true)
       } else {
         message.error('Upload failed.');
       }

@@ -19,7 +19,7 @@ const Home = () => {
             <h1 className="text-white text-5xl text-center font-medium">BE THE ODD ONE TO BE THE NO.1</h1>
             <h1 className="text-white text-2xl font-normal text-center">We Believe In Collaboration Over Competition</h1>
             <div className='flex gap-4 justify-center '>
-                <Link className='px-4 py-2 border rounded-full text-white' href='/about-us'>Why Join Us?</Link>
+                <Link className='px-4 py-2 border rounded-full text-white' href='/club-reasons'>Why Join Us?</Link>
                 <Link className='px-4 py-2 border rounded-full text-white'  href='/about-us'>About Us</Link>
             </div>
             </div>

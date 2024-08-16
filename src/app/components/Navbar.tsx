@@ -1,16 +1,18 @@
-import React from 'react';
+'use client'
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Button, Popover } from 'antd';
+import { Badge, Button, Popover } from 'antd';
 import { BellOutlined, UserOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 
 
-const Navbar = () => {
+const Navbar = ({refetch}:{refetch?:boolean}) => {
 
     const router=useRouter()
     const { data: session } = useSession()
+    const [documents, setDocuments] = useState<any>([]);
 
     const handleLogout = () => {
         const callbackUrl = `${window.location.origin}/auth/login`;
@@ -30,8 +32,39 @@ const Navbar = () => {
         </div>
       );
 
+
+      const fetchDocuments = async () => {
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/documents`, {
+            headers: {
+              'Authorization': `Bearer ${session?.accessToken}`
+            }
+          });
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const data = await response.json();
+          setDocuments(data?.data);
+        } catch (error) {
+          console.error('Error fetching documents:', error);
+        }
+      };
+    
+      useEffect(() => {
+          fetchDocuments();
+      }, [session,refetch]);
+
+      const countDocuments = documents?.filter((document:any) => {
+        const createdAt = new Date(document.createdAt);
+        const currentTime = new Date();
+        const timeDifference = currentTime.getTime() - createdAt.getTime();
+        const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+        return hoursDifference < 10;
+      }).length;
+
+
   return (
-    <nav className="w-full fixed  top-0 flex z-10 items-center justify-between p-4 bg-gray-800 text-white shadow-lg">
+    <nav className="w-full fixed  top-0 flex z-20 items-center justify-between p-4 bg-gray-800 text-white shadow-lg">
         <div className="logo">
           <a href="/">
             <Image src="/bmslogo.png" alt="Logo" width={300} height={200} className="cursor-pointer" />
@@ -52,7 +85,12 @@ const Navbar = () => {
 <a href="https://www.youtube.com/watch?v=cbgosmlUdT8" target='_blank' className="hover:text-gray-400 transition duration-300 ease-in-out">Video</a>
         </div>
         <div className="user-icon flex gap-6">
-        <BellOutlined  className='text-xl cursor-pointer' />
+          <div onClick={()=>{
+            router.push('/clubs')}}> <Badge  count={countDocuments}>
+          <BellOutlined  className='!text-xl !text-white cursor-pointer' />
+          </Badge></div>
+         
+       
         <Popover arrow={false} content={userPopoverContent} trigger="click">
             <UserOutlined className='text-xl cursor-pointer' />
           </Popover>
