@@ -22,6 +22,7 @@ const Signup = () => {
     const router=useRouter()
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+      console.log(process.env.NEXT_PUBLIC_API_URL)
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/signup`, {
           method: 'POST',
